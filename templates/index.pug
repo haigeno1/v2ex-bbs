@@ -1,0 +1,12 @@
+extends layout.pug
+block content
+   ul   
+        each post in posts  
+            li
+                h3
+                    a(target="_blank" href="/post/"+post.id )= post.title
+                div= post.content
+
+
+
+

@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.16.4",
+    "hbs": "^4.0.1",
+    "multer": "^1.4.1",
+    "pug": "^2.0.3",
+    "sequelize": "^4.39.0",
+    "sqlite": "^3.0.0",
+    "sqlite3": "https://github.com/mapbox/node-sqlite3/tarball/master",
+  }
+}

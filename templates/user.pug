@@ -1,0 +1,23 @@
+extends layout.pug
+block content
+    if user
+        div= user.name
+        div 
+            h2 他发过的帖子
+            ul
+                each post in posts
+                    li 
+                        h3
+                            a(href="/post/" + post.id)= post.content
+                            |  
+                            a(href="/delete-post/"+post.id) 删除
+            h2 他最近的评论
+            ul  
+                each comment in comments    
+                    li
+                        h3
+                            span= comment.title
+                        p= comment.content
+                        
+    else    
+        |没有您要找的用户

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <router-link to="/">首页</router-link>
+    <router-link to="/publish">发布</router-link>
+    <router-link to="/profile">我</router-link>
+    <a href="javascript:;" @click="logout"></a>
+    <!-- <router-link to="/">登出</router-link> -->
+    <router-link to="/login">登录</router-link>
+    <router-link to="/register">注册</router-link>
+    <router-view></router-view>
+  </div>
+</body>
+<script type="text/javascript" src="static/js/vue-2.5.17.js"></script>
+<script type="text/javascript" src="static/js/vue-router-3.0.1.js"></script>
+<script type="text/javascript" src="static/js/axios-0.18.0.js"></script>
+
+<script type="text/javascript">
+  const router = new Router({
+    routers: [
+      {
+        path: "/",
+        name: "home",
+        component: {
+          template: `
+            <ul>
+              <li v-for= "post in posts">
+                <pre>
+                  <router-link :to="'/post/' + post.id">
+                    {{post.title}}
+                  </router-link>
+                  by {{post.name}} - {{new Date(post.timestamp)}}
+                </pre>
+              </li>
+            </ul>
+          `,
+          data(){
+            return {
+              posts = []
+            }
+          },
+          async created(){
+            var res = await axios.get("/api/posts")
+            this.posts = res.data
+          }
+        }
+      },
+      {
+        path: "/post/:id",
+        name: "post",
+        component: {
+
+        }
+      },
+      {
+        path: "/user/:id",
+        name: "",
+        component: {
+
+        }
+      },
+      {
+        path: "/login",
+        //这里是默认的get方法吗??
+        name: "",
+        component: {
+          template: `
+            <input type="text" v-model="username"/>
+            <input type="text" v-model="password"/>
+            <input type="text" v-model="captcha"/>
+            <button @click="login">Login</button>
+            <p v-if="hasError">error happened</p>
+          `,
+          data(){
+            return {
+              username: "",
+              password: "",
+              captcha: "",
+              hasError: false,
+            }
+          },
+          methods: {
+            async login(){
+              try{
+                var res = await axios.post("login",{
+                  username: this.username,
+                  password: this.password,
+                  captcha: this.captcha,
+                })
+
+                //res不是一个promise吗怎么可以直接用.data??
+                this.$root.user = res.data
+                this.$router.push("/")
+              } catch(e){
+                //怎么判断出错的情况??不都是返回json吗??
+                this.hasError = true
+              }
+            }
+          }
+        }
+      },
+      {
+        path: "/register",
+        name: "",
+        component: {
+
+        }
+      },
+      {
+        path: "/publish",
+        name: "",
+        component: {
+
+        }
+      },
+      {
+        path: "/profile",
+        name: "",
+        component: {
+
+        }
+      },
+    ]
+  })
+
+  const app = new Vue({
+    el: "#app",
+    route,
+    data: {
+      user: null,
+    },
+    methods: {
+      logout(){
+        axios.get("/logout")
+      }
+    },
+    async created(){
+      var res = await axios.get("/api/userinfo")
+      this.user = res.data
+    },
+  })
+</script>
+</html>
